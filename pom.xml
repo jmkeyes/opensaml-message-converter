@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.github.jmkeyes</groupId>
+    <artifactId>opensaml-message-converter</artifactId>
+    <version>${revision}</version>
+
+    <name>opensaml-message-converter</name>
+    <description>Spring Framework :: OpenSAML Message Converter</description>
+
+    <properties>
+        <revision>1.0.0-SNAPSHOT</revision>
+
+        <java.version>17</java.version>
+
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <spring.version>6.1.5</spring.version>
+        <opensaml.version>4.0.1</opensaml.version>
+
+        <junit.version>5.10.2</junit.version>
+        <mockito.version>5.10.0</mockito.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.opensaml</groupId>
+            <artifactId>opensaml-core</artifactId>
+            <version>${opensaml.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.opensaml</groupId>
+            <artifactId>opensaml-saml-api</artifactId>
+            <version>${opensaml.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Only required to initialize OpenSAML for tests. -->
+        <dependency>
+            <groupId>org.opensaml</groupId>
+            <artifactId>opensaml-saml-impl</artifactId>
+            <version>${opensaml.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
