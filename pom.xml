@@ -18,7 +18,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
-        <spring.version>6.1.5</spring.version>
+        <spring.version>6.1.12</spring.version>
         <opensaml.version>4.0.1</opensaml.version>
 
         <junit.version>5.10.2</junit.version>
