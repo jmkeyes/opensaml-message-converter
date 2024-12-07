@@ -5,14 +5,12 @@
 
     <groupId>io.github.jmkeyes</groupId>
     <artifactId>opensaml-message-converter</artifactId>
-    <version>${revision}</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <name>opensaml-message-converter</name>
     <description>Spring Framework :: OpenSAML Message Converter</description>
 
     <properties>
-        <revision>1.0.0-SNAPSHOT</revision>
-
         <java.version>17</java.version>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>

@@ -1,3 +1,6 @@
+# Skip maven-git-versioning artifacts.
+.git-versioned-pom.xml
+
 # Don't include any IntelliJ bits.
 .idea/
 
