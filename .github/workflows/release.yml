@@ -1,0 +1,42 @@
+---
+name: Release
+
+on:
+  release:
+    types: [created]
+
+env:
+  JAVA_VERSION: 17
+  JAVA_DISTRIBUTION: temurin
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-tags: true
+        fetch-depth: 0
+
+    - name: Set up Java ${{ env.JAVA_VERSION }}
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: ${{ env.JAVA_DISTRIBUTION }}
+        server-id: github
+        settings-path: ${{ github.workspace }}
+
+    - name: Maven -- build & test
+      run: mvn -B verify --file pom.xml
+
+    - name: Publish to GitHub Packages
+      run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
