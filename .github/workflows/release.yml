@@ -10,15 +10,6 @@ env:
   JAVA_VERSION: 17
   DISTRIBUTION: temurin
 
-  # Pass token as an environment variable.
-  GITHUB_TOKEN: ${{ github.token }}
-
-  # Set some commonly used Maven options.
-  MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-  MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
-  MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-  MAVEN_GPG_PRIVATE_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
-
 jobs:
   publish-github-packages:
     name: Publish to GitHub Packages
@@ -47,10 +38,14 @@ jobs:
         server-username: MAVEN_USERNAME
         server-password: MAVEN_PASSWORD
         gpg-passphrase:  MAVEN_GPG_PASSPHRASE
-        gpg-private-key: ${{ env.MAVEN_GPG_PRIVATE_KEY }}
+        gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
 
     - name: Build and deploy to GitHub packages
       run: mvn --batch-mode --activate-profiles release,github-packages deploy
+      env:
+        MAVEN_USERNAME: ${{ github.actor }}
+        MAVEN_PASSWORD: ${{ github.token }}
+        MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
     - name: Upload build artifacts to release assets
       run: |
@@ -91,7 +86,11 @@ jobs:
         server-username: MAVEN_USERNAME
         server-password: MAVEN_PASSWORD
         gpg-passphrase:  MAVEN_GPG_PASSPHRASE
-        gpg-private-key: ${{ env.MAVEN_GPG_PRIVATE_KEY }}
+        gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
 
     - name: Publish to the Maven Central Repository
       run: mvn --batch-mode --activate-profiles release,maven-central deploy
+      env:
+        MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+        MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+        MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
