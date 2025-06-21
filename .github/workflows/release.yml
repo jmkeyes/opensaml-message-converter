@@ -47,7 +47,7 @@ jobs:
         MAVEN_PASSWORD: ${{ github.token }}
         MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
-    - name: Upload build artifacts to release assets
+    - name: Upload build artifacts to the release
       run: |
         ARTIFACT=$(mvn --quiet -DforceStdout help:evaluate -Dexpression=project.build.finalName)
         gh release upload ${GITHUB_RELEASE} target/${ARTIFACT}.pom
@@ -60,6 +60,7 @@ jobs:
         gh release upload ${GITHUB_RELEASE} target/${ARTIFACT}-javadoc.jar.asc
       env:
         GITHUB_RELEASE: ${{ github.event.release.name }}
+        GH_TOKEN: ${{ github.token }}
 
   publish-maven-central:
     name: Publish to Maven Central
