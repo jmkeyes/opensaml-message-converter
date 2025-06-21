@@ -34,9 +34,14 @@ jobs:
         java-version: ${{ env.JAVA_VERSION }}
         distribution: ${{ env.DISTRIBUTION }}
         server-id: github-packages
+        server-username: GITHUB_ACTOR
+        server-password: GITHUB_TOKEN
 
     - name: Build and deploy to GitHub packages
       run: mvn --batch-mode --activate-profiles github-packages deploy
+      env:
+        GITHUB_ACTOR: ${{ github.actor }}
+        GITHUB_TOKEN: ${{ github.token }}
 
   publish-maven-central:
     name: Publish to Maven Central
