@@ -30,8 +30,8 @@ jobs:
         distribution: ${{ env.JAVA_DISTRIBUTION }}
         cache: maven
 
-    - name: Maven -- build & test
-      run: mvn -B verify --file pom.xml
+    - name: Build and test project
+      run: mvn --batch-mode --update-snapshots --file pom.xml verify
 
   submit-dependencies:
     name: Dependency Snapshot
