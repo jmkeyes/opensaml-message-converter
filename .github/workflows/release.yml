@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      # Required to upload release assets.
-      contents: write
+      # Required by actions/setup-java
+      contents: read
       # Required to deploy to GitHub Packages.
       packages: write
 
@@ -33,34 +33,10 @@ jobs:
       with:
         java-version: ${{ env.JAVA_VERSION }}
         distribution: ${{ env.DISTRIBUTION }}
-        # Deploy artifacts to GitHub Packages.
         server-id: github-packages
-        server-username: MAVEN_USERNAME
-        server-password: MAVEN_PASSWORD
-        gpg-passphrase:  MAVEN_GPG_PASSPHRASE
-        gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
 
     - name: Build and deploy to GitHub packages
-      run: mvn --batch-mode --activate-profiles release,github-packages deploy
-      env:
-        MAVEN_USERNAME: ${{ github.actor }}
-        MAVEN_PASSWORD: ${{ github.token }}
-        MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-
-    - name: Upload build artifacts to the release
-      run: |
-        ARTIFACT=$(mvn --quiet -DforceStdout help:evaluate -Dexpression=project.build.finalName)
-        gh release upload ${GITHUB_RELEASE} target/${ARTIFACT}.pom
-        gh release upload ${GITHUB_RELEASE} target/${ARTIFACT}.pom.asc
-        gh release upload ${GITHUB_RELEASE} target/${ARTIFACT}.jar
-        gh release upload ${GITHUB_RELEASE} target/${ARTIFACT}.jar.asc
-        gh release upload ${GITHUB_RELEASE} target/${ARTIFACT}-sources.jar
-        gh release upload ${GITHUB_RELEASE} target/${ARTIFACT}-sources.jar.asc
-        gh release upload ${GITHUB_RELEASE} target/${ARTIFACT}-javadoc.jar
-        gh release upload ${GITHUB_RELEASE} target/${ARTIFACT}-javadoc.jar.asc
-      env:
-        GITHUB_RELEASE: ${{ github.event.release.name }}
-        GH_TOKEN: ${{ github.token }}
+      run: mvn --batch-mode --activate-profiles github-packages deploy
 
   publish-maven-central:
     name: Publish to Maven Central
@@ -90,7 +66,7 @@ jobs:
         gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
 
     - name: Publish to the Maven Central Repository
-      run: mvn --batch-mode --activate-profiles release,maven-central deploy
+      run: mvn --batch-mode --activate-profiles maven-central deploy
       env:
         MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
         MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
