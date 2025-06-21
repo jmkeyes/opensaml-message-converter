@@ -10,6 +10,9 @@ env:
   JAVA_VERSION: 17
   DISTRIBUTION: temurin
 
+  # Pass token as an environment variable.
+  GITHUB_TOKEN: ${{ github.token }}
+
   # Set some commonly used Maven options.
   MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
   MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
