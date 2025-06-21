@@ -6,8 +6,9 @@ on:
     types: [created]
 
 env:
+  # Ensure we use the same Java distribution.
   JAVA_VERSION: 17
-  JAVA_DISTRIBUTION: temurin
+  DISTRIBUTION: temurin
 
 jobs:
   release:
@@ -29,7 +30,7 @@ jobs:
       uses: actions/setup-java@v4
       with:
         java-version: ${{ env.JAVA_VERSION }}
-        distribution: ${{ env.JAVA_DISTRIBUTION }}
+        distribution: ${{ env.DISTRIBUTION }}
         server-id: github
         settings-path: ${{ github.workspace }}
 
