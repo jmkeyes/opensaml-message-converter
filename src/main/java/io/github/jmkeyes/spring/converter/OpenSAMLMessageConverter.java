@@ -21,6 +21,9 @@ import org.springframework.lang.NonNull;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * A Spring Framework MessageConverter implementation for OpenSAML objects.
+ */
 public class OpenSAMLMessageConverter extends AbstractHttpMessageConverter<SAMLObject> {
     // The following are various MIME types for SAML messages.
     static final MediaType SAML_MESSAGE = new MediaType("application", "samlmessage+xml");
@@ -40,6 +43,8 @@ public class OpenSAMLMessageConverter extends AbstractHttpMessageConverter<SAMLO
 
     /**
      * Creates a message converter from an initialized OpenSAML ParserPool.
+     *
+     * @param parserPool An initialized OpenSAML ParserPool.
      */
     public OpenSAMLMessageConverter(ParserPool parserPool) {
         super(StandardCharsets.UTF_8, SAML_MESSAGE, SAML_METADATA, SAML_ASSERTION);
