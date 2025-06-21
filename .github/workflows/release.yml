@@ -10,13 +10,21 @@ env:
   JAVA_VERSION: 17
   DISTRIBUTION: temurin
 
+  # Set some commonly used Maven options.
+  MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+  MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+  MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+  MAVEN_GPG_PRIVATE_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+
 jobs:
-  release:
-    name: Release
+  publish-github-packages:
+    name: Publish to GitHub Packages
     runs-on: ubuntu-latest
 
     permissions:
-      contents: read
+      # Required to upload release assets.
+      contents: write
+      # Required to deploy to GitHub Packages.
       packages: write
 
     steps:
@@ -31,13 +39,56 @@ jobs:
       with:
         java-version: ${{ env.JAVA_VERSION }}
         distribution: ${{ env.DISTRIBUTION }}
-        server-id: github
-        settings-path: ${{ github.workspace }}
+        # Deploy artifacts to GitHub Packages.
+        server-id: github-packages
+        server-username: MAVEN_USERNAME
+        server-password: MAVEN_PASSWORD
+        gpg-passphrase:  MAVEN_GPG_PASSPHRASE
+        gpg-private-key: ${{ env.MAVEN_GPG_PRIVATE_KEY }}
 
-    - name: Maven -- build & test
-      run: mvn -B verify --file pom.xml
+    - name: Build and deploy to GitHub packages
+      run: mvn --batch-mode --activate-profiles release,github-packages deploy
 
-    - name: Publish to GitHub Packages
-      run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
+    - name: Upload build artifacts to release assets
+      run: |
+        ARTIFACT=$(mvn --quiet -DforceStdout help:evaluate -Dexpression=project.build.finalName)
+        gh release upload ${GITHUB_RELEASE} target/${ARTIFACT}.pom
+        gh release upload ${GITHUB_RELEASE} target/${ARTIFACT}.pom.asc
+        gh release upload ${GITHUB_RELEASE} target/${ARTIFACT}.jar
+        gh release upload ${GITHUB_RELEASE} target/${ARTIFACT}.jar.asc
+        gh release upload ${GITHUB_RELEASE} target/${ARTIFACT}-sources.jar
+        gh release upload ${GITHUB_RELEASE} target/${ARTIFACT}-sources.jar.asc
+        gh release upload ${GITHUB_RELEASE} target/${ARTIFACT}-javadoc.jar
+        gh release upload ${GITHUB_RELEASE} target/${ARTIFACT}-javadoc.jar.asc
       env:
-        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_RELEASE: ${{ github.event.release.name }}
+
+  publish-maven-central:
+    name: Publish to Maven Central
+    runs-on: ubuntu-latest
+
+    permissions:
+      # Required by actions/setup-java
+      contents: read
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-tags: true
+        fetch-depth: 0
+
+    - name: Set up Java ${{ env.JAVA_VERSION }}
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: ${{ env.DISTRIBUTION }}
+        # Deploy artifacts to Maven Central.
+        server-id: maven-central
+        server-username: MAVEN_USERNAME
+        server-password: MAVEN_PASSWORD
+        gpg-passphrase:  MAVEN_GPG_PASSPHRASE
+        gpg-private-key: ${{ env.MAVEN_GPG_PRIVATE_KEY }}
+
+    - name: Publish to the Maven Central Repository
+      run: mvn --batch-mode --activate-profiles release,maven-central deploy
