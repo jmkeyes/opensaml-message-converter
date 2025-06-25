@@ -1,7 +1,7 @@
 package io.github.jmkeyes.spring.converter;
 
-import net.shibboleth.utilities.java.support.xml.ParserPool;
-import net.shibboleth.utilities.java.support.xml.XMLParserException;
+import net.shibboleth.shared.xml.ParserPool;
+import net.shibboleth.shared.xml.XMLParserException;
 import org.opensaml.core.config.ConfigurationService;
 import org.opensaml.core.xml.config.XMLObjectProviderRegistry;
 import org.opensaml.core.xml.io.MarshallingException;

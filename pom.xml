@@ -48,12 +48,33 @@
         <maven.plugin.gpg.version>3.2.7</maven.plugin.gpg.version>
 
         <spring.version>6.2.8</spring.version>
-        <opensaml.version>4.3.2</opensaml.version>
+        <opensaml.version>5.1.4</opensaml.version>
 
         <slf4j.version>2.0.17</slf4j.version>
         <junit.version>5.13.1</junit.version>
         <mockito.version>5.10.0</mockito.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>opensaml</id>
+            <name>OpenSAML Releases</name>
+            <url>https://build.shibboleth.net/maven/releases/</url>
+        </repository>
+    </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Import the OpenSAML 5.x BOM. -->
+            <dependency>
+                <groupId>org.opensaml</groupId>
+                <artifactId>opensaml-bom</artifactId>
+                <version>${opensaml.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -64,14 +85,7 @@
 
         <dependency>
             <groupId>org.opensaml</groupId>
-            <artifactId>opensaml-core</artifactId>
-            <version>${opensaml.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.opensaml</groupId>
             <artifactId>opensaml-saml-api</artifactId>
-            <version>${opensaml.version}</version>
         </dependency>
 
         <dependency>
@@ -106,18 +120,9 @@
         <dependency>
             <groupId>org.opensaml</groupId>
             <artifactId>opensaml-saml-impl</artifactId>
-            <version>${opensaml.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>opensaml</id>
-            <name>OpenSAML Releases</name>
-            <url>https://build.shibboleth.net/maven/releases/</url>
-        </repository>
-    </repositories>
 
     <profiles>
       <profile>
