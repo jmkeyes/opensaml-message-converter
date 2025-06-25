@@ -48,7 +48,7 @@
         <maven.plugin.gpg.version>3.2.7</maven.plugin.gpg.version>
 
         <spring.version>6.2.8</spring.version>
-        <opensaml.version>4.0.1</opensaml.version>
+        <opensaml.version>4.3.2</opensaml.version>
 
         <slf4j.version>2.0.17</slf4j.version>
         <junit.version>5.13.1</junit.version>
@@ -110,6 +110,14 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>opensaml</id>
+            <name>OpenSAML Releases</name>
+            <url>https://build.shibboleth.net/maven/releases/</url>
+        </repository>
+    </repositories>
 
     <profiles>
       <profile>
