@@ -1,11 +1,31 @@
 ---
 version: 2
 updates:
-  - package-ecosystem: "maven"
-    directory: "/"
-    schedule:
-      interval: "weekly"
+  # Main branch.
   - package-ecosystem: "github-actions"
+    target-branch: "main"
     directory: "/"
     schedule:
       interval: "weekly"
+  - package-ecosystem: "maven"
+    target-branch: "main"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # 1.x branch.
+  - package-ecosystem: "github-actions"
+    target-branch: "1.x"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "maven"
+    target-branch: "1.x"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "org.springframework:spring-web"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "org.opensaml:opensaml-core"
+        update-types: ["version-update:semver-major"]
